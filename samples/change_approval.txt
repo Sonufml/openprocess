@@ -1,0 +1,20 @@
+Process: Approve standard change
+Key: change_approval
+Version: 1.2
+Owner: IT Change Manager
+Purpose: Ensure changes to production IT services are assessed, authorised and recorded before implementation.
+Scope: Applies to all changes to production infrastructure and business applications. Emergency changes follow the separate emergency change procedure.
+Trigger: Change request submitted
+Outcome: Change closed and recorded
+
+1. [Requester] Submit change request | system=Jira Service Management; r=Requester; a=Requester; c=Service Owner; i=Change Manager
+2. [Change Manager] Screen change request for completeness | system=Jira Service Management; r=Change Manager; a=Change Manager; c=Requester; i=Service Owner; desc=Reject incomplete requests back to the requester within one working day.
+3. [Change Manager] Classify change risk | system=Jira Service Management; r=Change Manager; a=Change Manager; c=Technical Lead; i=Service Owner
+? Is the change standard? | control=Risk classification checkpoint
+-> Change is standard: Approve change under standing authority
+-> Change is normal: Present change to change advisory board
+4. [Change Manager] Approve change under standing authority | control=Standing authority approval; system=Jira Service Management; r=Change Manager; a=Change Manager; i=Service Owner
+5. [Change Advisory Board] Present change to change advisory board | control=Four-eyes approval; system=Confluence; r=Change Manager; a=CAB Chair; c=Technical Lead; i=Service Owner
+6. [Technical Lead] Implement approved change | system=Ansible Tower; r=Technical Lead; a=Service Owner; c=Change Manager; i=Service Desk
+7. [Technical Lead] Verify change outcome | control=Post-implementation review; system=LogicMonitor; r=Technical Lead; a=Service Owner; c=Change Manager; i=Change Manager
+8. [Change Manager] Record change closure | system=Jira Service Management; r=Change Manager; a=Change Manager; i=Service Owner

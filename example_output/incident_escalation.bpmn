@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_incident_escalation" targetNamespace="http://openprocess.dev/schema/bpmn" exporter="OpenProcess" exporterVersion="1.0">
+  <bpmn:collaboration id="Collaboration_incident_escalation">
+    <bpmn:participant id="Participant_incident_escalation" name="Escalate major incident" processRef="Process_incident_escalation" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_incident_escalation" name="Escalate major incident" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_incident_escalation">
+      <bpmn:lane id="lane_Service_Desk" name="Service Desk">
+        <bpmn:flowNodeRef>n_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_x1_Log_incident</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_x2_Triage</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_x3_Assign_incident_to_resolver_group</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>g_x4_Major_incident</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_x7_Notification</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="lane_Major_Incident_Manager" name="Major Incident Manager">
+        <bpmn:flowNodeRef>n_x5_Convene_major_incident_bridge</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="lane_Resolver_Group" name="Resolver Group">
+        <bpmn:flowNodeRef>g_join_n_x6_Resolve_incident_in_resolver_group</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_x6_Resolve_incident_in_resolver_group</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start" name="Monitoring alert or user-reported outage">
+      <bpmn:outgoing>f_start_n_x1_Log_incident</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="n_x1_Log_incident" name="Log incident">
+      <bpmn:incoming>f_start_n_x1_Log_incident</bpmn:incoming>
+      <bpmn:outgoing>f_n_x1_Log_incident_n_x2_Triage</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_x2_Triage" name="Triage">
+      <bpmn:incoming>f_n_x1_Log_incident_n_x2_Triage</bpmn:incoming>
+      <bpmn:outgoing>f_n_x2_Triage_n_x3_Assign_incident_to_resolver_gro</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_x3_Assign_incident_to_resolver_group" name="Assign incident to resolver group">
+      <bpmn:incoming>f_n_x2_Triage_n_x3_Assign_incident_to_resolver_gro</bpmn:incoming>
+      <bpmn:outgoing>f_n_x3_Assign_incident_to_resolver_group_g_x4_Majo</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="g_x4_Major_incident" name="Major incident?">
+      <bpmn:incoming>f_n_x3_Assign_incident_to_resolver_group_g_x4_Majo</bpmn:incoming>
+      <bpmn:outgoing>f_g_x4_Major_incident_n_x5_Convene_major_incident_</bpmn:outgoing>
+      <bpmn:outgoing>f_g_x4_Major_incident_n_x6_Resolve_incident_in_res</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="n_x5_Convene_major_incident_bridge" name="Convene major incident bridge">
+      <bpmn:incoming>f_g_x4_Major_incident_n_x5_Convene_major_incident_</bpmn:incoming>
+      <bpmn:outgoing>f_n_x5_Convene_major_incident_bridge_n_x6_Resolve_</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="g_join_n_x6_Resolve_incident_in_resolver_group" name="">
+      <bpmn:incoming>f_n_x5_Convene_major_incident_bridge_n_x6_Resolve_</bpmn:incoming>
+      <bpmn:incoming>f_g_x4_Major_incident_n_x6_Resolve_incident_in_res</bpmn:incoming>
+      <bpmn:outgoing>f_g_join_n_x6_Resolve_incident_in_resolver_group_n</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="n_x6_Resolve_incident_in_resolver_group" name="Resolve incident in resolver group">
+      <bpmn:incoming>f_g_join_n_x6_Resolve_incident_in_resolver_group_n</bpmn:incoming>
+      <bpmn:outgoing>f_n_x6_Resolve_incident_in_resolver_group_n_x7_Not</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_x7_Notification" name="Notification">
+      <bpmn:incoming>f_n_x6_Resolve_incident_in_resolver_group_n_x7_Not</bpmn:incoming>
+      <bpmn:outgoing>f_n_x7_Notification_end</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="n_end" name="Process complete">
+      <bpmn:incoming>f_n_x7_Notification_end</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="f_start_n_x1_Log_incident" sourceRef="n_start" targetRef="n_x1_Log_incident" />
+    <bpmn:sequenceFlow id="f_n_x1_Log_incident_n_x2_Triage" sourceRef="n_x1_Log_incident" targetRef="n_x2_Triage" />
+    <bpmn:sequenceFlow id="f_n_x2_Triage_n_x3_Assign_incident_to_resolver_gro" sourceRef="n_x2_Triage" targetRef="n_x3_Assign_incident_to_resolver_group" />
+    <bpmn:sequenceFlow id="f_n_x3_Assign_incident_to_resolver_group_g_x4_Majo" sourceRef="n_x3_Assign_incident_to_resolver_group" targetRef="g_x4_Major_incident" />
+    <bpmn:sequenceFlow id="f_g_x4_Major_incident_n_x5_Convene_major_incident_" sourceRef="g_x4_Major_incident" targetRef="n_x5_Convene_major_incident_bridge" name="Yes">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Yes</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_n_x5_Convene_major_incident_bridge_n_x6_Resolve_" sourceRef="n_x5_Convene_major_incident_bridge" targetRef="g_join_n_x6_Resolve_incident_in_resolver_group" />
+    <bpmn:sequenceFlow id="f_n_x6_Resolve_incident_in_resolver_group_n_x7_Not" sourceRef="n_x6_Resolve_incident_in_resolver_group" targetRef="n_x7_Notification" />
+    <bpmn:sequenceFlow id="f_n_x7_Notification_end" sourceRef="n_x7_Notification" targetRef="n_end" />
+    <bpmn:sequenceFlow id="f_g_x4_Major_incident_n_x6_Resolve_incident_in_res" sourceRef="g_x4_Major_incident" targetRef="g_join_n_x6_Resolve_incident_in_resolver_group" name="No">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_g_join_n_x6_Resolve_incident_in_resolver_group_n" sourceRef="g_join_n_x6_Resolve_incident_in_resolver_group" targetRef="n_x6_Resolve_incident_in_resolver_group" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_incident_escalation">
+    <bpmndi:BPMNPlane id="Plane_incident_escalation" bpmnElement="Collaboration_incident_escalation">
+      <bpmndi:BPMNShape id="Shape_Participant_incident_escalation" bpmnElement="Participant_incident_escalation" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1920" height="420" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_lane_Service_Desk" bpmnElement="lane_Service_Desk" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1890" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_lane_Major_Incident_Manager" bpmnElement="lane_Major_Incident_Manager" isHorizontal="true">
+        <dc:Bounds x="190" y="220" width="1890" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_lane_Resolver_Group" bpmnElement="lane_Resolver_Group" isHorizontal="true">
+        <dc:Bounds x="190" y="360" width="1890" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_start" bpmnElement="n_start">
+        <dc:Bounds x="262" y="132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="235" y="174" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x1_Log_incident" bpmnElement="n_x1_Log_incident">
+        <dc:Bounds x="405" y="110" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x2_Triage" bpmnElement="n_x2_Triage">
+        <dc:Bounds x="585" y="110" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x3_Assign_incident_to_resolver_group" bpmnElement="n_x3_Assign_incident_to_resolver_group">
+        <dc:Bounds x="765" y="110" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_g_x4_Major_incident" bpmnElement="g_x4_Major_incident">
+        <dc:Bounds x="975" y="125" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="955" y="181" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x5_Convene_major_incident_bridge" bpmnElement="n_x5_Convene_major_incident_bridge">
+        <dc:Bounds x="1125" y="250" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_g_join_n_x6_Resolve_incident_in_resolver_group" bpmnElement="g_join_n_x6_Resolve_incident_in_resolver_group">
+        <dc:Bounds x="1335" y="405" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1315" y="461" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x6_Resolve_incident_in_resolver_group" bpmnElement="n_x6_Resolve_incident_in_resolver_group">
+        <dc:Bounds x="1485" y="390" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x7_Notification" bpmnElement="n_x7_Notification">
+        <dc:Bounds x="1665" y="110" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_end" bpmnElement="n_end">
+        <dc:Bounds x="1882" y="132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1855" y="174" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_f_start_n_x1_Log_incident" bpmnElement="f_start_n_x1_Log_incident">
+        <di:waypoint x="298" y="150" />
+        <di:waypoint x="405" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x1_Log_incident_n_x2_Triage" bpmnElement="f_n_x1_Log_incident_n_x2_Triage">
+        <di:waypoint x="515" y="150" />
+        <di:waypoint x="585" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x2_Triage_n_x3_Assign_incident_to_resolver_gro" bpmnElement="f_n_x2_Triage_n_x3_Assign_incident_to_resolver_gro">
+        <di:waypoint x="695" y="150" />
+        <di:waypoint x="765" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x3_Assign_incident_to_resolver_group_g_x4_Majo" bpmnElement="f_n_x3_Assign_incident_to_resolver_group_g_x4_Majo">
+        <di:waypoint x="875" y="150" />
+        <di:waypoint x="975" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_g_x4_Major_incident_n_x5_Convene_major_incident_" bpmnElement="f_g_x4_Major_incident_n_x5_Convene_major_incident_">
+        <di:waypoint x="1025" y="150" />
+        <di:waypoint x="1075" y="150" />
+        <di:waypoint x="1075" y="290" />
+        <di:waypoint x="1125" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x5_Convene_major_incident_bridge_n_x6_Resolve_" bpmnElement="f_n_x5_Convene_major_incident_bridge_n_x6_Resolve_">
+        <di:waypoint x="1235" y="290" />
+        <di:waypoint x="1285" y="290" />
+        <di:waypoint x="1285" y="430" />
+        <di:waypoint x="1335" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x6_Resolve_incident_in_resolver_group_n_x7_Not" bpmnElement="f_n_x6_Resolve_incident_in_resolver_group_n_x7_Not">
+        <di:waypoint x="1595" y="430" />
+        <di:waypoint x="1630" y="430" />
+        <di:waypoint x="1630" y="150" />
+        <di:waypoint x="1665" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x7_Notification_end" bpmnElement="f_n_x7_Notification_end">
+        <di:waypoint x="1775" y="150" />
+        <di:waypoint x="1882" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_g_x4_Major_incident_n_x6_Resolve_incident_in_res" bpmnElement="f_g_x4_Major_incident_n_x6_Resolve_incident_in_res">
+        <di:waypoint x="1025" y="150" />
+        <di:waypoint x="1180" y="150" />
+        <di:waypoint x="1180" y="430" />
+        <di:waypoint x="1335" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_g_join_n_x6_Resolve_incident_in_resolver_group_n" bpmnElement="f_g_join_n_x6_Resolve_incident_in_resolver_group_n">
+        <di:waypoint x="1385" y="430" />
+        <di:waypoint x="1485" y="430" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

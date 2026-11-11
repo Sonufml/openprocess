@@ -1,0 +1,14 @@
+Process: Escalate major incident
+Key: incident_escalation
+Owner: Herr Weber
+Trigger: Monitoring alert or user-reported outage
+
+1. [Service Desk] Log incident | system=Jira Service Management; r=Service Desk Agent
+2. [Service Desk] Triage
+3. [Service Desk] Assign incident to resolver group | r=Service Desk Agent; a=Service Desk Lead
+? Major incident?
+-> Yes: Convene major incident bridge
+-> No: Resolve incident in resolver group
+4. [Major Incident Manager] Convene major incident bridge | r=Major Incident Manager
+5. [Resolver Group] Resolve incident in resolver group | r=Resolver Group Engineer; a=Resolver Group Lead, Service Owner
+6. [Service Desk] Notification

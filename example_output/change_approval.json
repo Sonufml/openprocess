@@ -1,0 +1,292 @@
+{
+  "key": "change_approval",
+  "name": "Approve standard change",
+  "purpose": "Ensure changes to production IT services are assessed, authorised and recorded before implementation.",
+  "scope": "Applies to all changes to production infrastructure and business applications. Emergency changes follow the separate emergency change procedure.",
+  "trigger": "Change request submitted",
+  "owner": "IT Change Manager",
+  "version": "1.2",
+  "source_document": "change_approval.txt",
+  "lanes": [
+    {
+      "id": "lane_Requester",
+      "name": "Requester",
+      "owner": ""
+    },
+    {
+      "id": "lane_Change_Manager",
+      "name": "Change Manager",
+      "owner": ""
+    },
+    {
+      "id": "lane_Change_Advisory_Board",
+      "name": "Change Advisory Board",
+      "owner": ""
+    },
+    {
+      "id": "lane_Technical_Lead",
+      "name": "Technical Lead",
+      "owner": ""
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n_start",
+      "name": "Change request submitted",
+      "kind": "startEvent",
+      "lane": "lane_Requester",
+      "raci": {
+        "responsible": "",
+        "accountable": "",
+        "consulted": "",
+        "informed": ""
+      },
+      "control": "",
+      "system": "",
+      "description": ""
+    },
+    {
+      "id": "n_x1_Submit_change_request",
+      "name": "Submit change request",
+      "kind": "userTask",
+      "lane": "lane_Requester",
+      "raci": {
+        "responsible": "Requester",
+        "accountable": "Requester",
+        "consulted": "Service Owner",
+        "informed": "Change Manager"
+      },
+      "control": "",
+      "system": "Jira Service Management",
+      "description": ""
+    },
+    {
+      "id": "n_x2_Screen_change_request_for_completeness",
+      "name": "Screen change request for completeness",
+      "kind": "userTask",
+      "lane": "lane_Change_Manager",
+      "raci": {
+        "responsible": "Change Manager",
+        "accountable": "Change Manager",
+        "consulted": "Requester",
+        "informed": "Service Owner"
+      },
+      "control": "",
+      "system": "Jira Service Management",
+      "description": "Reject incomplete requests back to the requester within one working day."
+    },
+    {
+      "id": "n_x3_Classify_change_risk",
+      "name": "Classify change risk",
+      "kind": "userTask",
+      "lane": "lane_Change_Manager",
+      "raci": {
+        "responsible": "Change Manager",
+        "accountable": "Change Manager",
+        "consulted": "Technical Lead",
+        "informed": "Service Owner"
+      },
+      "control": "",
+      "system": "Jira Service Management",
+      "description": ""
+    },
+    {
+      "id": "g_x4_Is_the_change_standard",
+      "name": "Is the change standard?",
+      "kind": "exclusiveGateway",
+      "lane": "lane_Change_Manager",
+      "raci": {
+        "responsible": "",
+        "accountable": "",
+        "consulted": "",
+        "informed": ""
+      },
+      "control": "Risk classification checkpoint",
+      "system": "",
+      "description": ""
+    },
+    {
+      "id": "n_x5_Approve_change_under_standing_authority",
+      "name": "Approve change under standing authority",
+      "kind": "userTask",
+      "lane": "lane_Change_Manager",
+      "raci": {
+        "responsible": "Change Manager",
+        "accountable": "Change Manager",
+        "consulted": "",
+        "informed": "Service Owner"
+      },
+      "control": "Standing authority approval",
+      "system": "Jira Service Management",
+      "description": ""
+    },
+    {
+      "id": "g_join_n_x6_Present_change_to_change_advisory_boar",
+      "name": "",
+      "kind": "exclusiveGateway",
+      "lane": "lane_Change_Advisory_Board",
+      "raci": {
+        "responsible": "",
+        "accountable": "",
+        "consulted": "",
+        "informed": ""
+      },
+      "control": "",
+      "system": "",
+      "description": ""
+    },
+    {
+      "id": "n_x6_Present_change_to_change_advisory_board",
+      "name": "Present change to change advisory board",
+      "kind": "userTask",
+      "lane": "lane_Change_Advisory_Board",
+      "raci": {
+        "responsible": "Change Manager",
+        "accountable": "CAB Chair",
+        "consulted": "Technical Lead",
+        "informed": "Service Owner"
+      },
+      "control": "Four-eyes approval",
+      "system": "Confluence",
+      "description": ""
+    },
+    {
+      "id": "n_x7_Implement_approved_change",
+      "name": "Implement approved change",
+      "kind": "userTask",
+      "lane": "lane_Technical_Lead",
+      "raci": {
+        "responsible": "Technical Lead",
+        "accountable": "Service Owner",
+        "consulted": "Change Manager",
+        "informed": "Service Desk"
+      },
+      "control": "",
+      "system": "Ansible Tower",
+      "description": ""
+    },
+    {
+      "id": "n_x8_Verify_change_outcome",
+      "name": "Verify change outcome",
+      "kind": "userTask",
+      "lane": "lane_Technical_Lead",
+      "raci": {
+        "responsible": "Technical Lead",
+        "accountable": "Service Owner",
+        "consulted": "Change Manager",
+        "informed": "Change Manager"
+      },
+      "control": "Post-implementation review",
+      "system": "LogicMonitor",
+      "description": ""
+    },
+    {
+      "id": "n_x9_Record_change_closure",
+      "name": "Record change closure",
+      "kind": "userTask",
+      "lane": "lane_Change_Manager",
+      "raci": {
+        "responsible": "Change Manager",
+        "accountable": "Change Manager",
+        "consulted": "",
+        "informed": "Service Owner"
+      },
+      "control": "",
+      "system": "Jira Service Management",
+      "description": ""
+    },
+    {
+      "id": "n_end",
+      "name": "Change closed and recorded",
+      "kind": "endEvent",
+      "lane": "lane_Change_Manager",
+      "raci": {
+        "responsible": "",
+        "accountable": "",
+        "consulted": "",
+        "informed": ""
+      },
+      "control": "",
+      "system": "",
+      "description": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f_start_n_x1_Submit_change_request",
+      "source": "n_start",
+      "target": "n_x1_Submit_change_request",
+      "name": ""
+    },
+    {
+      "id": "f_n_x1_Submit_change_request_n_x2_Screen_change_re",
+      "source": "n_x1_Submit_change_request",
+      "target": "n_x2_Screen_change_request_for_completeness",
+      "name": ""
+    },
+    {
+      "id": "f_n_x2_Screen_change_request_for_completeness_n_x3",
+      "source": "n_x2_Screen_change_request_for_completeness",
+      "target": "n_x3_Classify_change_risk",
+      "name": ""
+    },
+    {
+      "id": "f_n_x3_Classify_change_risk_g_x4_Is_the_change_sta",
+      "source": "n_x3_Classify_change_risk",
+      "target": "g_x4_Is_the_change_standard",
+      "name": ""
+    },
+    {
+      "id": "f_g_x4_Is_the_change_standard_n_x5_Approve_change_",
+      "source": "g_x4_Is_the_change_standard",
+      "target": "n_x5_Approve_change_under_standing_authority",
+      "name": "Change is standard"
+    },
+    {
+      "id": "f_n_x5_Approve_change_under_standing_authority_n_x",
+      "source": "n_x5_Approve_change_under_standing_authority",
+      "target": "g_join_n_x6_Present_change_to_change_advisory_boar",
+      "name": ""
+    },
+    {
+      "id": "f_n_x6_Present_change_to_change_advisory_board_n_x",
+      "source": "n_x6_Present_change_to_change_advisory_board",
+      "target": "n_x7_Implement_approved_change",
+      "name": ""
+    },
+    {
+      "id": "f_n_x7_Implement_approved_change_n_x8_Verify_chang",
+      "source": "n_x7_Implement_approved_change",
+      "target": "n_x8_Verify_change_outcome",
+      "name": ""
+    },
+    {
+      "id": "f_n_x8_Verify_change_outcome_n_x9_Record_change_cl",
+      "source": "n_x8_Verify_change_outcome",
+      "target": "n_x9_Record_change_closure",
+      "name": ""
+    },
+    {
+      "id": "f_n_x9_Record_change_closure_end",
+      "source": "n_x9_Record_change_closure",
+      "target": "n_end",
+      "name": ""
+    },
+    {
+      "id": "f_g_x4_Is_the_change_standard_n_x6_Present_change_",
+      "source": "g_x4_Is_the_change_standard",
+      "target": "g_join_n_x6_Present_change_to_change_advisory_boar",
+      "name": "Change is normal"
+    },
+    {
+      "id": "f_g_join_n_x6_Present_change_to_change_advisory_bo",
+      "source": "g_join_n_x6_Present_change_to_change_advisory_boar",
+      "target": "n_x6_Present_change_to_change_advisory_board",
+      "name": ""
+    }
+  ],
+  "pcf_id": "OP-IT-09",
+  "pcf_name": "Manage IT changes",
+  "pcf_confidence": 1.0,
+  "itil_practice": "Change enablement"
+}

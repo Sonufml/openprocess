@@ -1,0 +1,250 @@
+{
+  "key": "access_request",
+  "name": "Fulfil application access request",
+  "purpose": "Grant, review and record user access to business applications in line with least-privilege principles.",
+  "scope": "Covers access to all internally managed business applications. Privileged administrator access follows the separate privileged access procedure.",
+  "trigger": "Access request raised in the service portal",
+  "owner": "IT Service Desk Lead",
+  "version": "0.9",
+  "source_document": "access_request.txt",
+  "lanes": [
+    {
+      "id": "lane_Employee",
+      "name": "Employee",
+      "owner": ""
+    },
+    {
+      "id": "lane_Line_Manager",
+      "name": "Line Manager",
+      "owner": ""
+    },
+    {
+      "id": "lane_Application_Owner",
+      "name": "Application Owner",
+      "owner": ""
+    },
+    {
+      "id": "lane_Service_Desk",
+      "name": "Service Desk",
+      "owner": ""
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n_start",
+      "name": "Access request raised in the service portal",
+      "kind": "startEvent",
+      "lane": "lane_Employee",
+      "raci": {
+        "responsible": "",
+        "accountable": "",
+        "consulted": "",
+        "informed": ""
+      },
+      "control": "",
+      "system": "",
+      "description": ""
+    },
+    {
+      "id": "n_x1_Raise_access_request",
+      "name": "Raise access request",
+      "kind": "userTask",
+      "lane": "lane_Employee",
+      "raci": {
+        "responsible": "Employee",
+        "accountable": "Employee",
+        "consulted": "",
+        "informed": "Line Manager"
+      },
+      "control": "",
+      "system": "Service Portal",
+      "description": ""
+    },
+    {
+      "id": "n_x2_Confirm_business_need_for_access",
+      "name": "Confirm business need for access",
+      "kind": "userTask",
+      "lane": "lane_Line_Manager",
+      "raci": {
+        "responsible": "Line Manager",
+        "accountable": "Line Manager",
+        "consulted": "Employee",
+        "informed": "Service Desk"
+      },
+      "control": "Line manager authorisation",
+      "system": "Service Portal",
+      "description": ""
+    },
+    {
+      "id": "g_x3_Does_the_role_require_elevated_rights",
+      "name": "Does the role require elevated rights?",
+      "kind": "exclusiveGateway",
+      "lane": "lane_Line_Manager",
+      "raci": {
+        "responsible": "",
+        "accountable": "",
+        "consulted": "",
+        "informed": ""
+      },
+      "control": "Segregation of duties check",
+      "system": "",
+      "description": ""
+    },
+    {
+      "id": "n_x4_Obtain_application_owner_authorisation",
+      "name": "Obtain application owner authorisation",
+      "kind": "userTask",
+      "lane": "lane_Application_Owner",
+      "raci": {
+        "responsible": "Application Owner",
+        "accountable": "Application Owner",
+        "consulted": "Information Security",
+        "informed": "Line Manager"
+      },
+      "control": "Four-eyes approval",
+      "system": "Service Portal",
+      "description": ""
+    },
+    {
+      "id": "g_join_n_x5_Provision_access_in_the_target_system",
+      "name": "",
+      "kind": "exclusiveGateway",
+      "lane": "lane_Service_Desk",
+      "raci": {
+        "responsible": "",
+        "accountable": "",
+        "consulted": "",
+        "informed": ""
+      },
+      "control": "",
+      "system": "",
+      "description": ""
+    },
+    {
+      "id": "n_x5_Provision_access_in_the_target_system",
+      "name": "Provision access in the target system",
+      "kind": "userTask",
+      "lane": "lane_Service_Desk",
+      "raci": {
+        "responsible": "Service Desk Agent",
+        "accountable": "Service Desk Lead",
+        "consulted": "",
+        "informed": "Employee"
+      },
+      "control": "",
+      "system": "Active Directory",
+      "description": ""
+    },
+    {
+      "id": "n_x6_Record_access_grant_in_the_access_register",
+      "name": "Record access grant in the access register",
+      "kind": "userTask",
+      "lane": "lane_Service_Desk",
+      "raci": {
+        "responsible": "Service Desk Agent",
+        "accountable": "Service Desk Lead",
+        "consulted": "Information Security",
+        "informed": "Line Manager"
+      },
+      "control": "Access recertification evidence",
+      "system": "Access Register",
+      "description": ""
+    },
+    {
+      "id": "n_x7_Confirm_access_is_working",
+      "name": "Confirm access is working",
+      "kind": "userTask",
+      "lane": "lane_Employee",
+      "raci": {
+        "responsible": "Employee",
+        "accountable": "Service Desk Lead",
+        "consulted": "",
+        "informed": ""
+      },
+      "control": "",
+      "system": "Service Portal",
+      "description": ""
+    },
+    {
+      "id": "n_end",
+      "name": "Access granted and recorded",
+      "kind": "endEvent",
+      "lane": "lane_Employee",
+      "raci": {
+        "responsible": "",
+        "accountable": "",
+        "consulted": "",
+        "informed": ""
+      },
+      "control": "",
+      "system": "",
+      "description": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f_start_n_x1_Raise_access_request",
+      "source": "n_start",
+      "target": "n_x1_Raise_access_request",
+      "name": ""
+    },
+    {
+      "id": "f_n_x1_Raise_access_request_n_x2_Confirm_business_",
+      "source": "n_x1_Raise_access_request",
+      "target": "n_x2_Confirm_business_need_for_access",
+      "name": ""
+    },
+    {
+      "id": "f_n_x2_Confirm_business_need_for_access_g_x3_Does_",
+      "source": "n_x2_Confirm_business_need_for_access",
+      "target": "g_x3_Does_the_role_require_elevated_rights",
+      "name": ""
+    },
+    {
+      "id": "f_g_x3_Does_the_role_require_elevated_rights_n_x4_",
+      "source": "g_x3_Does_the_role_require_elevated_rights",
+      "target": "n_x4_Obtain_application_owner_authorisation",
+      "name": "Elevated rights required"
+    },
+    {
+      "id": "f_n_x4_Obtain_application_owner_authorisation_n_x5",
+      "source": "n_x4_Obtain_application_owner_authorisation",
+      "target": "g_join_n_x5_Provision_access_in_the_target_system",
+      "name": ""
+    },
+    {
+      "id": "f_n_x5_Provision_access_in_the_target_system_n_x6_",
+      "source": "n_x5_Provision_access_in_the_target_system",
+      "target": "n_x6_Record_access_grant_in_the_access_register",
+      "name": ""
+    },
+    {
+      "id": "f_n_x6_Record_access_grant_in_the_access_register_",
+      "source": "n_x6_Record_access_grant_in_the_access_register",
+      "target": "n_x7_Confirm_access_is_working",
+      "name": ""
+    },
+    {
+      "id": "f_n_x7_Confirm_access_is_working_end",
+      "source": "n_x7_Confirm_access_is_working",
+      "target": "n_end",
+      "name": ""
+    },
+    {
+      "id": "f_g_x3_Does_the_role_require_elevated_rights_n_x5_",
+      "source": "g_x3_Does_the_role_require_elevated_rights",
+      "target": "g_join_n_x5_Provision_access_in_the_target_system",
+      "name": "Standard rights sufficient"
+    },
+    {
+      "id": "f_g_join_n_x5_Provision_access_in_the_target_syste",
+      "source": "g_join_n_x5_Provision_access_in_the_target_system",
+      "target": "n_x5_Provision_access_in_the_target_system",
+      "name": ""
+    }
+  ],
+  "pcf_id": "OP-IT-07",
+  "pcf_name": "Manage IT service requests and access",
+  "pcf_confidence": 0.833,
+  "itil_practice": "Service request management"
+}

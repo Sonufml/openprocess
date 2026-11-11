@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenProcess — IT governance process studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/bpmn-js@17.11.1/dist/assets/diagram-js.css">
+<link rel="stylesheet" href="https://unpkg.com/bpmn-js@17.11.1/dist/assets/bpmn-js.css">
+<link rel="stylesheet" href="https://unpkg.com/bpmn-js@17.11.1/dist/assets/bpmn-font/css/bpmn.css">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wordmark">
+    <span class="mark">OP</span>
+    <div>
+      <h1>OpenProcess</h1>
+      <p>Policy documents in. Standards-compliant process models out.</p>
+    </div>
+  </div>
+  <dl class="masthead-meta">
+    <div><dt>Notation</dt><dd>BPMN 2.0 (OMG)</dd></div>
+    <div><dt>Rules</dt><dd>{{ rule_count }} active</dd></div>
+    <div><dt>Extraction</dt><dd>{{ "Groq · Llama 3.3" if llm_ready else "Deterministic parser" }}</dd></div>
+  </dl>
+</header>
+
+<p class="framework-banner" title="{{ pcf_source }}">
+  Classifying against <strong>{{ pcf_source }}</strong>
+</p>
+
+<main>
+
+<section class="intake" id="intake">
+  <div class="intake-head">
+    <h2>Analyse a process document</h2>
+    <div class="sample-row">
+      <span>Load a sample</span>
+      {% for name in samples %}
+        <button class="chip" data-sample="{{ name }}">{{ name.replace('.txt','').replace('_',' ') }}</button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <textarea id="document" spellcheck="false"
+    placeholder="Paste an IT policy, work instruction or procedure here — or drop a PDF, Word or text file anywhere on this panel."></textarea>
+
+  <div class="intake-actions">
+    <label class="file-btn">
+      <input type="file" id="file" accept=".txt,.md,.pdf,.docx" hidden>
+      Choose file
+    </label>
+    <span id="filename" class="filename"></span>
+    <button id="run" class="primary">Analyse document</button>
+  </div>
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+</section>
+
+<section class="results" id="results" hidden>
+
+  <div class="scorecard">
+    <div class="score-head">
+      <span class="eyebrow">Governance score</span>
+      <div class="score-value"><span id="score">—</span><span class="score-max">/100</span></div>
+      <p id="verdict" class="verdict"></p>
+    </div>
+    <div class="tiers" id="tiers"></div>
+    <dl class="classification" id="classification"></dl>
+    <div class="downloads">
+      <span class="eyebrow">Export</span>
+      <a id="dl-bpmn" class="dl primary-dl" download>BPMN 2.0 model<small>opens in ARIS, Signavio, Camunda</small></a>
+      <a id="dl-xml" class="dl" download>Confluence page<small>storage format</small></a>
+      <a id="dl-xlsx" class="dl" download>Process register<small>Excel</small></a>
+      <a id="dl-md" class="dl" download>Documentation<small>Markdown</small></a>
+      <a id="dl-json" class="dl" download>Process model<small>JSON</small></a>
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-head">
+      <h2 id="process-name">—</h2>
+      <div class="canvas-tools">
+        <button id="fit" class="ghost">Fit</button>
+        <button id="zoom-in" class="ghost" aria-label="Zoom in">+</button>
+        <button id="zoom-out" class="ghost" aria-label="Zoom out">−</button>
+      </div>
+    </div>
+    <div id="canvas"></div>
+    <p class="canvas-hint">Select a finding to highlight the element it refers to.</p>
+  </div>
+
+  <div class="findings">
+    <div class="findings-head">
+      <h2>Findings</h2>
+      <div class="filters" id="filters">
+        <button class="filter is-on" data-severity="all">All</button>
+        <button class="filter" data-severity="error">Errors</button>
+        <button class="filter" data-severity="warning">Warnings</button>
+        <button class="filter" data-severity="info">Info</button>
+      </div>
+    </div>
+    <ul id="finding-list"></ul>
+  </div>
+
+</section>
+</main>
+
+<footer>
+  <p>
+    OpenProcess generates draft models for human review. Every model is a proposal
+    for the process owner to confirm, never an authorised process.
+  </p>
+  <p class="attribution">
+    APQC's Process Classification Framework (PCF) is an open standard developed by APQC.
+    BPMN 2.0 is a standard maintained by the Object Management Group.
+  </p>
+</footer>
+
+<script src="https://unpkg.com/bpmn-js@17.11.1/dist/bpmn-navigated-viewer.development.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

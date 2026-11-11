@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_access_request" targetNamespace="http://openprocess.dev/schema/bpmn" exporter="OpenProcess" exporterVersion="1.0">
+  <bpmn:collaboration id="Collaboration_access_request">
+    <bpmn:participant id="Participant_access_request" name="Fulfil application access request" processRef="Process_access_request" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_access_request" name="Fulfil application access request" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_access_request">
+      <bpmn:lane id="lane_Employee" name="Employee">
+        <bpmn:flowNodeRef>n_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_x1_Raise_access_request</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_x7_Confirm_access_is_working</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="lane_Line_Manager" name="Line Manager">
+        <bpmn:flowNodeRef>n_x2_Confirm_business_need_for_access</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>g_x3_Does_the_role_require_elevated_rights</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="lane_Application_Owner" name="Application Owner">
+        <bpmn:flowNodeRef>n_x4_Obtain_application_owner_authorisation</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="lane_Service_Desk" name="Service Desk">
+        <bpmn:flowNodeRef>g_join_n_x5_Provision_access_in_the_target_system</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_x5_Provision_access_in_the_target_system</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_x6_Record_access_grant_in_the_access_register</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start" name="Access request raised in the service portal">
+      <bpmn:outgoing>f_start_n_x1_Raise_access_request</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="n_x1_Raise_access_request" name="Raise access request">
+      <bpmn:incoming>f_start_n_x1_Raise_access_request</bpmn:incoming>
+      <bpmn:outgoing>f_n_x1_Raise_access_request_n_x2_Confirm_business_</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_x2_Confirm_business_need_for_access" name="Confirm business need for access">
+      <bpmn:incoming>f_n_x1_Raise_access_request_n_x2_Confirm_business_</bpmn:incoming>
+      <bpmn:outgoing>f_n_x2_Confirm_business_need_for_access_g_x3_Does_</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="g_x3_Does_the_role_require_elevated_rights" name="Does the role require elevated rights?">
+      <bpmn:incoming>f_n_x2_Confirm_business_need_for_access_g_x3_Does_</bpmn:incoming>
+      <bpmn:outgoing>f_g_x3_Does_the_role_require_elevated_rights_n_x4_</bpmn:outgoing>
+      <bpmn:outgoing>f_g_x3_Does_the_role_require_elevated_rights_n_x5_</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="n_x4_Obtain_application_owner_authorisation" name="Obtain application owner authorisation">
+      <bpmn:incoming>f_g_x3_Does_the_role_require_elevated_rights_n_x4_</bpmn:incoming>
+      <bpmn:outgoing>f_n_x4_Obtain_application_owner_authorisation_n_x5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="g_join_n_x5_Provision_access_in_the_target_system" name="">
+      <bpmn:incoming>f_n_x4_Obtain_application_owner_authorisation_n_x5</bpmn:incoming>
+      <bpmn:incoming>f_g_x3_Does_the_role_require_elevated_rights_n_x5_</bpmn:incoming>
+      <bpmn:outgoing>f_g_join_n_x5_Provision_access_in_the_target_syste</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="n_x5_Provision_access_in_the_target_system" name="Provision access in the target system">
+      <bpmn:incoming>f_g_join_n_x5_Provision_access_in_the_target_syste</bpmn:incoming>
+      <bpmn:outgoing>f_n_x5_Provision_access_in_the_target_system_n_x6_</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_x6_Record_access_grant_in_the_access_register" name="Record access grant in the access register">
+      <bpmn:incoming>f_n_x5_Provision_access_in_the_target_system_n_x6_</bpmn:incoming>
+      <bpmn:outgoing>f_n_x6_Record_access_grant_in_the_access_register_</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_x7_Confirm_access_is_working" name="Confirm access is working">
+      <bpmn:incoming>f_n_x6_Record_access_grant_in_the_access_register_</bpmn:incoming>
+      <bpmn:outgoing>f_n_x7_Confirm_access_is_working_end</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="n_end" name="Access granted and recorded">
+      <bpmn:incoming>f_n_x7_Confirm_access_is_working_end</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="f_start_n_x1_Raise_access_request" sourceRef="n_start" targetRef="n_x1_Raise_access_request" />
+    <bpmn:sequenceFlow id="f_n_x1_Raise_access_request_n_x2_Confirm_business_" sourceRef="n_x1_Raise_access_request" targetRef="n_x2_Confirm_business_need_for_access" />
+    <bpmn:sequenceFlow id="f_n_x2_Confirm_business_need_for_access_g_x3_Does_" sourceRef="n_x2_Confirm_business_need_for_access" targetRef="g_x3_Does_the_role_require_elevated_rights" />
+    <bpmn:sequenceFlow id="f_g_x3_Does_the_role_require_elevated_rights_n_x4_" sourceRef="g_x3_Does_the_role_require_elevated_rights" targetRef="n_x4_Obtain_application_owner_authorisation" name="Elevated rights required">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Elevated rights required</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_n_x4_Obtain_application_owner_authorisation_n_x5" sourceRef="n_x4_Obtain_application_owner_authorisation" targetRef="g_join_n_x5_Provision_access_in_the_target_system" />
+    <bpmn:sequenceFlow id="f_n_x5_Provision_access_in_the_target_system_n_x6_" sourceRef="n_x5_Provision_access_in_the_target_system" targetRef="n_x6_Record_access_grant_in_the_access_register" />
+    <bpmn:sequenceFlow id="f_n_x6_Record_access_grant_in_the_access_register_" sourceRef="n_x6_Record_access_grant_in_the_access_register" targetRef="n_x7_Confirm_access_is_working" />
+    <bpmn:sequenceFlow id="f_n_x7_Confirm_access_is_working_end" sourceRef="n_x7_Confirm_access_is_working" targetRef="n_end" />
+    <bpmn:sequenceFlow id="f_g_x3_Does_the_role_require_elevated_rights_n_x5_" sourceRef="g_x3_Does_the_role_require_elevated_rights" targetRef="g_join_n_x5_Provision_access_in_the_target_system" name="Standard rights sufficient">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Standard rights sufficient</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_g_join_n_x5_Provision_access_in_the_target_syste" sourceRef="g_join_n_x5_Provision_access_in_the_target_system" targetRef="n_x5_Provision_access_in_the_target_system" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_access_request">
+    <bpmndi:BPMNPlane id="Plane_access_request" bpmnElement="Collaboration_access_request">
+      <bpmndi:BPMNShape id="Shape_Participant_access_request" bpmnElement="Participant_access_request" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1920" height="560" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_lane_Employee" bpmnElement="lane_Employee" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1890" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_lane_Line_Manager" bpmnElement="lane_Line_Manager" isHorizontal="true">
+        <dc:Bounds x="190" y="220" width="1890" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_lane_Application_Owner" bpmnElement="lane_Application_Owner" isHorizontal="true">
+        <dc:Bounds x="190" y="360" width="1890" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_lane_Service_Desk" bpmnElement="lane_Service_Desk" isHorizontal="true">
+        <dc:Bounds x="190" y="500" width="1890" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_start" bpmnElement="n_start">
+        <dc:Bounds x="262" y="132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="235" y="174" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x1_Raise_access_request" bpmnElement="n_x1_Raise_access_request">
+        <dc:Bounds x="405" y="110" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x2_Confirm_business_need_for_access" bpmnElement="n_x2_Confirm_business_need_for_access">
+        <dc:Bounds x="585" y="250" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_g_x3_Does_the_role_require_elevated_rights" bpmnElement="g_x3_Does_the_role_require_elevated_rights">
+        <dc:Bounds x="795" y="265" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="775" y="321" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x4_Obtain_application_owner_authorisation" bpmnElement="n_x4_Obtain_application_owner_authorisation">
+        <dc:Bounds x="945" y="390" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_g_join_n_x5_Provision_access_in_the_target_system" bpmnElement="g_join_n_x5_Provision_access_in_the_target_system">
+        <dc:Bounds x="1155" y="545" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1135" y="601" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x5_Provision_access_in_the_target_system" bpmnElement="n_x5_Provision_access_in_the_target_system">
+        <dc:Bounds x="1305" y="530" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x6_Record_access_grant_in_the_access_register" bpmnElement="n_x6_Record_access_grant_in_the_access_register">
+        <dc:Bounds x="1485" y="530" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_x7_Confirm_access_is_working" bpmnElement="n_x7_Confirm_access_is_working">
+        <dc:Bounds x="1665" y="110" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_n_end" bpmnElement="n_end">
+        <dc:Bounds x="1882" y="132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1855" y="174" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_f_start_n_x1_Raise_access_request" bpmnElement="f_start_n_x1_Raise_access_request">
+        <di:waypoint x="298" y="150" />
+        <di:waypoint x="405" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x1_Raise_access_request_n_x2_Confirm_business_" bpmnElement="f_n_x1_Raise_access_request_n_x2_Confirm_business_">
+        <di:waypoint x="515" y="150" />
+        <di:waypoint x="550" y="150" />
+        <di:waypoint x="550" y="290" />
+        <di:waypoint x="585" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x2_Confirm_business_need_for_access_g_x3_Does_" bpmnElement="f_n_x2_Confirm_business_need_for_access_g_x3_Does_">
+        <di:waypoint x="695" y="290" />
+        <di:waypoint x="795" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_g_x3_Does_the_role_require_elevated_rights_n_x4_" bpmnElement="f_g_x3_Does_the_role_require_elevated_rights_n_x4_">
+        <di:waypoint x="845" y="290" />
+        <di:waypoint x="895" y="290" />
+        <di:waypoint x="895" y="430" />
+        <di:waypoint x="945" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x4_Obtain_application_owner_authorisation_n_x5" bpmnElement="f_n_x4_Obtain_application_owner_authorisation_n_x5">
+        <di:waypoint x="1055" y="430" />
+        <di:waypoint x="1105" y="430" />
+        <di:waypoint x="1105" y="570" />
+        <di:waypoint x="1155" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x5_Provision_access_in_the_target_system_n_x6_" bpmnElement="f_n_x5_Provision_access_in_the_target_system_n_x6_">
+        <di:waypoint x="1415" y="570" />
+        <di:waypoint x="1485" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x6_Record_access_grant_in_the_access_register_" bpmnElement="f_n_x6_Record_access_grant_in_the_access_register_">
+        <di:waypoint x="1595" y="570" />
+        <di:waypoint x="1630" y="570" />
+        <di:waypoint x="1630" y="150" />
+        <di:waypoint x="1665" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_n_x7_Confirm_access_is_working_end" bpmnElement="f_n_x7_Confirm_access_is_working_end">
+        <di:waypoint x="1775" y="150" />
+        <di:waypoint x="1882" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_g_x3_Does_the_role_require_elevated_rights_n_x5_" bpmnElement="f_g_x3_Does_the_role_require_elevated_rights_n_x5_">
+        <di:waypoint x="845" y="290" />
+        <di:waypoint x="1000" y="290" />
+        <di:waypoint x="1000" y="570" />
+        <di:waypoint x="1155" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_f_g_join_n_x5_Provision_access_in_the_target_syste" bpmnElement="f_g_join_n_x5_Provision_access_in_the_target_syste">
+        <di:waypoint x="1205" y="570" />
+        <di:waypoint x="1305" y="570" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+out/
+data/apqc_pcf.xlsx
+.env
+node_modules/
+.venv/
+.pytest_cache/

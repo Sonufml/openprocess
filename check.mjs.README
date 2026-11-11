@@ -1,0 +1,2 @@
+Requires: npm install bpmn-moddle bpmnlint
+Run:      node check.mjs out/*.bpmn

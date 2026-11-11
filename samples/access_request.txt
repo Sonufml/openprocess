@@ -1,0 +1,18 @@
+Process: Fulfil application access request
+Key: access_request
+Version: 0.9
+Owner: IT Service Desk Lead
+Purpose: Grant, review and record user access to business applications in line with least-privilege principles.
+Scope: Covers access to all internally managed business applications. Privileged administrator access follows the separate privileged access procedure.
+Trigger: Access request raised in the service portal
+Outcome: Access granted and recorded
+
+1. [Employee] Raise access request | system=Service Portal; r=Employee; a=Employee; i=Line Manager
+2. [Line Manager] Confirm business need for access | control=Line manager authorisation; system=Service Portal; r=Line Manager; a=Line Manager; c=Employee; i=Service Desk
+? Does the role require elevated rights? | control=Segregation of duties check
+-> Elevated rights required: Obtain application owner authorisation
+-> Standard rights sufficient: Provision access in the target system
+3. [Application Owner] Obtain application owner authorisation | control=Four-eyes approval; system=Service Portal; r=Application Owner; a=Application Owner; c=Information Security; i=Line Manager
+4. [Service Desk] Provision access in the target system | system=Active Directory; r=Service Desk Agent; a=Service Desk Lead; i=Employee
+5. [Service Desk] Record access grant in the access register | control=Access recertification evidence; system=Access Register; r=Service Desk Agent; a=Service Desk Lead; c=Information Security; i=Line Manager
+6. [Employee] Confirm access is working | system=Service Portal; r=Employee; a=Service Desk Lead
